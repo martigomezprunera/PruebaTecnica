@@ -1,4 +1,3 @@
-
 import json
 from json.decoder import JSONDecodeError
 from flask import Flask, jsonify, request
@@ -7,6 +6,7 @@ from flask import Flask, jsonify, request
 from database import initialDatabase
 from database import searchIfBusinessExists
 from database import newFavouriteBusiness
+from database import listFavouritesBusiness
  
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -55,3 +55,21 @@ def addFavourite():
         return jsonify({"response": str(resultNewFavourite)})
 
     return jsonify({"response": "Se ha añadido la empresa a tu lista de favoritos"})
+
+@app.route('/listFavourites', methods=['GET'])
+def listFavourites():
+    idBusiness = request.args.get('idBusiness')
+
+    if len(request.args) > 1:
+       return jsonify({"response": "Solo necesitas el org_id"})
+
+    if idBusiness is None:
+       return jsonify({"response": "No has introducido el idBusiness de la empresa"})
+    
+    listFavourite = listFavouritesBusiness(idBusiness)
+    if listFavourite == "No tienes empresas en tu lista de favoritos":
+        return jsonify({"response": str(listFavourite)})
+    else:
+        return json.loads(listFavourite)
+
+    

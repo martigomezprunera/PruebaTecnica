@@ -33,7 +33,7 @@ def initialDatabase():
     #get results
     cursor.execute("SELECT * FROM business")
     results = cursor.fetchall()
-    print(results)
+    print("Lista de empresas:" + str(results))
     connection.commit()
     connection.close()
 
@@ -91,8 +91,44 @@ def newFavouriteBusiness(org_id, favourite_org_id):
     else:
         return "Ya tienes esta empresa en favoritos" 
 
+def listFavouritesBusiness(org_id):
+    connection = sqlite3.connect('business.db')
+    cursor = connection.cursor()
 
+    cursor.execute("SELECT * FROM favourite_business where org_id =" + str(org_id))
+    dataSelectList = cursor.fetchall()
 
+    #Creamos el esqueleto de la consulta
+    listFavourites = "{\"ListFavourites\": ["
+    #En caso que solo haya una en favoritos
+    if len(dataSelectList) == 1:
+        for row in dataSelectList:
+            listFavourites += "{"
+            listFavourites += "\"org_id\": " + "" + str(row[0]) + ", "
+            listFavourites += "\"favourite_org_id\": " + "" +str(row[1]) + ", "
+            listFavourites += "\"date_favourite\": " + "\"" + str(row[2]) + "\""
+            listFavourites += "}"
+        listFavourites += "]}"
+        resultListFavourites = listFavourites
+
+    if len(dataSelectList) > 1:
+        for row in dataSelectList:
+            listFavourites += "{"
+            listFavourites += "\"org_id\": " + "" + str(row[0]) + ", "
+            listFavourites += "\"favourite_org_id\": " + "" +str(row[1]) + ", "
+            listFavourites += "\"date_favourite\": " + "\"" + str(row[2]) + "\""
+            listFavourites += "},"
+        resultListFavourites = listFavourites.rstrip(listFavourites[-1])
+        resultListFavourites += "]}"
+
+    connection.commit()
+    connection.close()
+
+    if len(dataSelectList) > 0:
+        print(resultListFavourites)
+        return resultListFavourites
+    else:
+        return "No tienes empresas en tu lista de favoritos"
 
 
 
