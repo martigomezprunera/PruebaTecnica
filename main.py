@@ -7,6 +7,7 @@ from database import initialDatabase
 from database import searchIfBusinessExists
 from database import newFavouriteBusiness
 from database import listFavouritesBusiness
+from database import deleteFavouriteOnList
  
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -71,5 +72,21 @@ def listFavourites():
         return jsonify({"response": str(listFavourite)})
     else:
         return json.loads(listFavourite)
+
+@app.route('/deleteFavourite', methods=['DELETE'])
+def deleteFavourite():
+    org_id = request.args.get('org_id')
+    favourite_org_id = request.args.get('favourite_org_id')
+
+    if len(request.args) > 2:
+       return jsonify({"response": "Hay mas parametros de los necesarios"})
+
+    if org_id is None:
+       return jsonify({"response": "No has introducido el org_id de la empresa"})
+    if favourite_org_id is None:
+       return jsonify({"response": "No has introducido el favourite_org_id de la empresa"})
+
+    deleteResult = deleteFavouriteOnList(org_id, favourite_org_id)
+    return jsonify({"response": str(deleteResult)})
 
     
