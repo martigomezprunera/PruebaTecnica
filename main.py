@@ -8,6 +8,7 @@ from database import searchIfBusinessExists
 from database import newFavouriteBusiness
 from database import listFavouritesBusiness
 from database import deleteFavouriteOnList
+from database import availableBusiness
  
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -89,4 +90,11 @@ def deleteFavourite():
     deleteResult = deleteFavouriteOnList(org_id, favourite_org_id)
     return jsonify({"response": str(deleteResult)})
 
-    
+@app.route('/availableBusiness', methods=['GET'])
+def listBusiness():
+
+    if len(request.args) > 0:
+       return jsonify({"response": "Hay mas parametros de los necesarios"})
+
+    listBusiness = availableBusiness()
+    return json.loads(listBusiness)   

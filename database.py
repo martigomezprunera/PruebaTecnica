@@ -52,14 +52,12 @@ def searchIfBusinessExists(org_id, favourite_org_id):
     resultOrgId = cursor.fetchall()
     if len(resultOrgId)==0:
         message = "No hay ninguna empresa con este org_id"
-        print(message)
         return message
 
     cursor.execute("SELECT * FROM business where id_business =" + str(favourite_org_id))
     resultFavourite_org_id = cursor.fetchall()
     if len(resultFavourite_org_id)==0:
         message = "No hay ninguna empresa con este favourite_org_id"
-        print(message)
         return message
 
     connection.close()
@@ -98,7 +96,11 @@ def listFavouritesBusiness(org_id):
     connection = sqlite3.connect('business.db')
     cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM favourite_business where org_id =" + str(org_id))
+    cursor.execute("SELECT org_id, favourite_org_id, date_favourite, name" 
+                    + " FROM favourite_business" 
+                    + " INNER JOIN business"
+                    + " ON business.id_business = favourite_business.favourite_org_id"
+                    + " WHERE org_id =" + str(org_id))
     dataSelectList = cursor.fetchall()
 
     #Creamos el esqueleto de la consulta
@@ -107,22 +109,24 @@ def listFavouritesBusiness(org_id):
     if len(dataSelectList) == 1:
         for row in dataSelectList:
             listFavourites += "{"
-            listFavourites += "\"org_id\": " + "" + str(row[0]) + ", "
+            listFavourites += "\"" + str(row[3]) + "\":{" 
+            listFavourites += "\"org_id\": " + str(row[0]) + ", "
             listFavourites += "\"favourite_org_id\": " + "" +str(row[1]) + ", "
             listFavourites += "\"date_favourite\": " + "\"" + str(row[2]) + "\""
             listFavourites += "}"
-        listFavourites += "]}"
+        listFavourites += "}]}"
         resultListFavourites = listFavourites
 
     if len(dataSelectList) > 1:
+        listFavourites = "{\"ListFavourites\": [{"
         for row in dataSelectList:
-            listFavourites += "{"
-            listFavourites += "\"org_id\": " + "" + str(row[0]) + ", "
+            listFavourites += "\"" + str(row[3]) + "\":{" 
+            listFavourites += "\"org_id\": " + str(row[0]) + ", "
             listFavourites += "\"favourite_org_id\": " + "" +str(row[1]) + ", "
             listFavourites += "\"date_favourite\": " + "\"" + str(row[2]) + "\""
             listFavourites += "},"
         resultListFavourites = listFavourites.rstrip(listFavourites[-1])
-        resultListFavourites += "]}"
+        resultListFavourites += "}]}"
 
     connection.commit()
     connection.close()
@@ -147,5 +151,39 @@ def deleteFavouriteOnList(org_id, favourite_org_id):
     else:
         return "No existe esa empresa favorita para la empresa seleccionada"
 
+def availableBusiness():
+    connection = sqlite3.connect('business.db')
+    cursor = connection.cursor()
 
+    cursor.execute("SELECT * FROM business")
+    dataSelectList = cursor.fetchall()
+
+    #Creamos el esqueleto de la consulta
+    listBusiness = "{\"AvailableBusiness\": ["
+    #En caso que solo haya una empresa
+    if len(dataSelectList) == 1:
+        for row in dataSelectList:
+            listBusiness += "{"
+            listBusiness += "\"id_business\": " +  str(row[0]) + ", " 
+            listBusiness += "\"name\": " + "\"" + str(row[1]) + "\", "
+            listBusiness += "\"country\": " + "\"" + str(row[2]) + "\""
+            listBusiness += "}"
+        listBusiness += "]}"
+        resultlistBusiness = listBusiness
+
+    if len(dataSelectList) > 1:
+        for row in dataSelectList:
+            listBusiness += "{"
+            listBusiness += "\"id_business\": " +  str(row[0]) + ", " 
+            listBusiness += "\"name\": " + "\"" + str(row[1]) + "\", "
+            listBusiness += "\"country\": " + "\"" + str(row[2]) + "\""
+            listBusiness += "},"
+        resultlistBusiness = listBusiness.rstrip(listBusiness[-1])
+        resultlistBusiness += "]}"
+
+    connection.close()
+    if len(dataSelectList) > 0:
+        return resultlistBusiness
+    else:
+        return "No tienes empresas en tu lista de favoritos"
 
