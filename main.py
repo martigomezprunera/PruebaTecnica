@@ -3,12 +3,7 @@ from json.decoder import JSONDecodeError
 from flask import Flask, jsonify, request
 
 #DATABASE
-from database import initialDatabase
-from database import searchIfBusinessExists
-from database import newFavouriteBusiness
-from database import listFavouritesBusiness
-from database import deleteFavouriteOnList
-from database import availableBusiness
+from database import *
  
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -98,3 +93,23 @@ def listBusiness():
 
     listBusiness = availableBusiness()
     return json.loads(listBusiness)   
+
+@app.route('/addNewBusiness', methods=['POST'])
+def newBusiness():
+    try:
+        req_Json = json.loads(request.data)
+    except JSONDecodeError:
+        return jsonify({"response": "El JSON no es correcto"})
+    except TypeError:
+        return jsonify({"response": "Error inesperado"})
+
+    #Control de variables pasadas desde POSTMAN
+    if len(req_Json) > 2:
+        return jsonify({"response": "Hay mas parametros de los necesarios"})
+    if 'name' not in req_Json:
+        return jsonify({"response": "name es obligatorio"})
+    if 'country' not in req_Json:
+        return jsonify({"response": "country es obligatorio"}) 
+
+    newBusinessResult = addNewBusiness(req_Json['name'], req_Json['country'])
+    return jsonify({"response": str(newBusinessResult)})
