@@ -187,3 +187,23 @@ def availableBusiness():
     else:
         return "No tienes empresas en tu lista de favoritos"
 
+def addNewBusiness(name, country):
+    connection = sqlite3.connect('business.db')
+    cursor = connection.cursor()
+
+    #Comprobaremos que no exista este registro en la BD
+    print("SELECT * FROM business WHERE name = '" + str(name) + "'")
+    cursor.execute("SELECT * FROM business WHERE name = '" + str(name) + "'")
+    dataExists = cursor.fetchone()
+
+    if dataExists is None:
+        cursor.execute("INSERT INTO business(name, country)"
+                        + "VALUES(" + "'" + str(name) + "', " + "'" + str(country) + "')")
+
+        print("INSERT INTO business(name, country)"
+                        + "VALUES(" + "'" + str(name) + "', " + "'" + str(country) + "')")
+        connection.commit()
+        connection.close()
+        return "Se ha añadido la nueva empresa"
+    else:
+        return "Ya existe esta empresa" 
