@@ -67,7 +67,8 @@ def listFavourites():
     if listFavourite == "No tienes empresas en tu lista de favoritos":
         return jsonify({"response": str(listFavourite)})
     else:
-        return json.loads(listFavourite)
+        print("Estoy entrando en cargar JSON")
+        return json.loads(str(listFavourite))
 
 @app.route('/deleteFavourite', methods=['DELETE'])
 def deleteFavourite():

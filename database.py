@@ -104,30 +104,31 @@ def listFavouritesBusiness(org_id):
     dataSelectList = cursor.fetchall()
 
     #Creamos el esqueleto de la consulta
-    listFavourites = "{\"ListFavourites\": ["
+    listFavourites = "{\"ListFavourites\":["
     #En caso que solo haya una en favoritos
     if len(dataSelectList) == 1:
         for row in dataSelectList:
             listFavourites += "{"
-            listFavourites += "\"" + str(row[3]) + "\":{" 
+            listFavourites += "\"name\": " + "\"" + str(row[3]) + "\", "
             listFavourites += "\"org_id\": " + str(row[0]) + ", "
             listFavourites += "\"favourite_org_id\": " + "" +str(row[1]) + ", "
             listFavourites += "\"date_favourite\": " + "\"" + str(row[2]) + "\""
             listFavourites += "}"
-        listFavourites += "}]}"
+        listFavourites += "]}"
         resultListFavourites = listFavourites
 
     if len(dataSelectList) > 1:
-        listFavourites = "{\"ListFavourites\": [{"
         for row in dataSelectList:
-            listFavourites += "\"" + str(row[3]) + "\":{" 
+            listFavourites += "{"
+            listFavourites += "\"name\": " + "\"" + str(row[3]) + "\", "
             listFavourites += "\"org_id\": " + str(row[0]) + ", "
             listFavourites += "\"favourite_org_id\": " + "" +str(row[1]) + ", "
             listFavourites += "\"date_favourite\": " + "\"" + str(row[2]) + "\""
             listFavourites += "},"
         resultListFavourites = listFavourites.rstrip(listFavourites[-1])
-        resultListFavourites += "}]}"
+        resultListFavourites += "]}"
 
+    print(resultListFavourites)
     connection.commit()
     connection.close()
 
