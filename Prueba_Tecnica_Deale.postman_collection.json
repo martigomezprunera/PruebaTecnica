@@ -1,0 +1,152 @@
+{
+	"info": {
+		"_postman_id": "b7ce0510-4f6b-4601-a4d5-a32c0c371a99",
+		"name": "Prueba Tecnica (Deale)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21992084"
+	},
+	"item": [
+		{
+			"name": "AddFavourite",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"org_id\": 2,\r\n    \"favourite_org_id\": 7\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/addFavourite",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"addFavourite"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ListFavourites",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/listFavourites?idBusiness=2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"listFavourites"
+					],
+					"query": [
+						{
+							"key": "idBusiness",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteFavourite",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/deleteFavourite?org_id=7&favourite_org_id=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"deleteFavourite"
+					],
+					"query": [
+						{
+							"key": "org_id",
+							"value": "7"
+						},
+						{
+							"key": "favourite_org_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AvailableBusiness",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/availableBusiness",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"availableBusiness"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddNewBusiness",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Beep\",\r\n    \"country\": \"Portugal\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/addNewBusiness",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"addNewBusiness"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
